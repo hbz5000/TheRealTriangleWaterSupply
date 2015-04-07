@@ -33,6 +33,7 @@ public:
 	void triggerInfrastructure(int realization);
 	void updateFallsQuality();
 	void setStartYear(int SSY);
+	void chooseStreamflows();
 	
 	WaterUtility durham, owasa, cary, raleigh;
 	TimeSeriesData durhamInflows, owasaInflows, fallsInflows, wheelerInflows, crabtreeInflows, claytonInflows, jordanInflows, lillingtonInflows, littleRiverRaleighInflows;
@@ -42,6 +43,7 @@ public:
 	int borgToggle;
 	int solutionNumber;
 	int bondLength;
+	int numRecords;
 	double bondRate;
 	
 private:
@@ -115,6 +117,7 @@ private:
 	int numFutureYears;
 	int startSimulationYear;
 	int volumeIncrements, costRiskLevel;
+	double *actualStreamflows;
 	
 	
 	double caryUpgrades[4];

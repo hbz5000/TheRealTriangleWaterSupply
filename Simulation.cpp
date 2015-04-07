@@ -39,6 +39,7 @@ void Simulation::writeDataLists()
 	volumeIncrements = 20;
 	numFutureYears = 51;
 	general_1d_allocate(xreal, num_dec);//Decision variables
+	general_1d_allocate(actualStreamflows,numRealizations);
 
 	durham.name = "Durham";
 	raleigh.name = "Raleigh";
@@ -278,16 +279,16 @@ void Simulation::importDataFiles()
 	readFile(lillingtonGaugeInflow, directoryName + "updatedLillingtonInflow.csv", 81, 52);
 	readFile(littleRiverRaleighInflow, directoryName + "updatedLittleRiverRaleighInflow.csv", 81, 52);
 	
-	readFile(michieInflowSYN, directoryName + "updatedMichieInflowSYN.csv", 1000, 70*52);
-	readFile(littleRiverInflowSYN, directoryName + "updatedLittleRiverInflowSYN.csv", 1000, 70*52);
-	readFile(owasaInflowSYN, directoryName + "updatedOWASAInflowSYN.csv", 1000, 70*52);
-	readFile(fallsLakeInflowSYN, directoryName + "updatedFallsLakeInflowSYN.csv", 1000, 70*52);
-	readFile(lakeWBInflowSYN, directoryName + "updatedLakeWBInflowSYN.csv", 1000, 70*52);
-	readFile(claytonInflowSYN, directoryName + "claytonGageInflowSYN.csv", 1000, 70*52);
-	readFile(crabtreeInflowSYN, directoryName + "crabtreeCreekInflowSYN.csv", 1000, 70*52);
-	readFile(jordanLakeInflowSYN, directoryName + "updatedJordanLakeInflowSYN.csv", 1000, 70*52);
-	readFile(lillingtonGaugeInflowSYN, directoryName + "updatedLillingtonInflowSYN.csv", 1000, 70*52);
-	readFile(littleRiverRaleighInflowSYN, directoryName + "updatedLittleRiverRaleighInflowSYN.csv", 1000, 70*52);
+	readFile(michieInflowSYN, directoryName + "updatedMichieInflowSYN.csv", numRecords, 70*52);
+	readFile(littleRiverInflowSYN, directoryName + "updatedLittleRiverInflowSYN.csv", numRecords, 70*52);
+	readFile(owasaInflowSYN, directoryName + "updatedOWASAInflowSYN.csv", numRecords, 70*52);
+	readFile(fallsLakeInflowSYN, directoryName + "updatedFallsLakeInflowSYN.csv", numRecords, 70*52);
+	readFile(lakeWBInflowSYN, directoryName + "updatedLakeWBInflowSYN.csv", numRecords, 70*52);
+	readFile(claytonInflowSYN, directoryName + "claytonGageInflowSYN.csv", numRecords, 70*52);
+	readFile(crabtreeInflowSYN, directoryName + "crabtreeCreekInflowSYN.csv", numRecords, 70*52);
+	readFile(jordanLakeInflowSYN, directoryName + "updatedJordanLakeInflowSYN.csv", numRecords, 70*52);
+	readFile(lillingtonGaugeInflowSYN, directoryName + "updatedLillingtonInflowSYN.csv", numRecords, 70*52);
+	readFile(littleRiverRaleighInflowSYN, directoryName + "updatedLittleRiverRaleighInflowSYN.csv", numRecords, 70*52);
 	
 	
 	// Evaporation data (MG/acre)
@@ -502,23 +503,7 @@ void Simulation::preconditionData(double unit_demand_multiplier, double future_d
 				
 			}
 		}
-		
-		for (int row = 0; row<numRealizations;row++)
-		{
-			for (int col = 0; col < terminateYear*52; col++)
-			{
-				durhamInflows.synthetic[row][col] 	= michieInflowSYN[row][col]+littleRiverInflowSYN[row][col];
-				owasaInflows.synthetic[row][col] 	= owasaInflowSYN[row][col];
-				fallsInflows.synthetic[row][col]	= fallsLakeInflowSYN[row][col];
-				wheelerInflows.synthetic[row][col]	= lakeWBInflowSYN[row][col];
-				claytonInflows.synthetic[row][col]	= claytonInflowSYN[row][col];
-				crabtreeInflows.synthetic[row][col]	= crabtreeInflowSYN[row][col];
-				jordanInflows.synthetic[row][col]	= jordanLakeInflowSYN[row][col];
-				lillingtonInflows.synthetic[row][col] = lillingtonGaugeInflowSYN[row][col];
-				littleRiverRaleighInflows.synthetic[row][col] = littleRiverRaleighInflowSYN[row][col];
-				
-			}
-		}
+
 		int streamflowStartYear = inflowR - UDr; 
 		durhamInflows.calculateNormalizations(inflowR, inflowC, streamflowStartYear);
 		owasaInflows.calculateNormalizations(inflowR, inflowC, streamflowStartYear);
@@ -644,6 +629,43 @@ void Simulation::preconditionData(double unit_demand_multiplier, double future_d
 
 	return;
 }
+void Simulation::chooseStreamflows()
+{
+	zeroes(actualStreamflows, numRealizations);
+	int x;
+	int counter;
+	for (int row = 0; row<numRealizations;row++)
+	{
+		counter = 0;
+		while (counter == 0)
+		{
+			x = rand() % numRecords;
+			counter = 1;
+			for(int y = 0; y<row;y++)
+			{
+				if(actualStreamflows[y]==x)
+				{
+					counter = 0;
+				}
+			}
+			
+		}
+		actualStreamflows[row] = x;
+		for (int col = 0; col < terminateYear*52; col++)
+		{			
+			durhamInflows.synthetic[row][col] 	= michieInflowSYN[x][col]+littleRiverInflowSYN[x][col];
+			owasaInflows.synthetic[row][col] 	= owasaInflowSYN[x][col];
+			fallsInflows.synthetic[row][col]	= fallsLakeInflowSYN[x][col];
+			wheelerInflows.synthetic[row][col]	= lakeWBInflowSYN[x][col];
+			claytonInflows.synthetic[row][col]	= claytonInflowSYN[x][col];
+			crabtreeInflows.synthetic[row][col]	= crabtreeInflowSYN[x][col];
+			jordanInflows.synthetic[row][col]	= jordanLakeInflowSYN[x][col];
+			lillingtonInflows.synthetic[row][col] = lillingtonGaugeInflowSYN[x][col];
+			littleRiverRaleighInflows.synthetic[row][col] = littleRiverRaleighInflowSYN[x][col];
+				
+		}
+	}
+}
 void Simulation::correlateDemandVariations(double demand_variation_multiplier)
 {
 	owasa.generateDemandVariation(52, &owasaInflows, demand_variation_multiplier);
@@ -762,7 +784,7 @@ void Simulation::calculation(double *c_xreal, double *c_obj, double *c_constr)
 				
 	calculateWaterPrices();
 	calculateWaterSurcharges();
-
+	chooseStreamflows();
 	
 	durham.insurancePremium = 1.2; 
 	cary.insurancePremium = 1.2;
@@ -1023,45 +1045,58 @@ void Simulation::calculation(double *c_xreal, double *c_obj, double *c_constr)
 	///OWASA infrastructure
 	owasa.infMatrix[0][0] = xreal[27];////University Lake expansion
 	owasa.infMatrix[0][2] = 17;
-	owasa.infMatrix[0][3] = 107.0;
+	owasa.infMatrix[0][4] = 107.0;
+	owasa.infMatrix[0][5] = 3 + rand() % 3;
 	owasa.infMatrix[1][0] = xreal[28];////Cane Creek expansion
 	owasa.infMatrix[1][2] = 17;
 	owasa.infMatrix[1][4] = 127.0;
+	owasa.infMatrix[1][5] = 3 + rand() % 3;
 	owasa.infMatrix[2][0] = xreal[29];////Quarry reservoir expansion (shallow)
 	owasa.infMatrix[2][2] = 23;
 	owasa.infMatrix[2][4] = 1.4;
+	owasa.infMatrix[2][5] = 3 + rand() % 3;
 	owasa.infMatrix[3][0] = xreal[30];////Quarry reservoir expansion (deep)
 	owasa.infMatrix[3][2] = 23;
 	owasa.infMatrix[3][4] = 1.4;
+	owasa.infMatrix[3][5] = 3 + rand() % 3;
 	///Durham infrastructure
 	durham.infMatrix[0][0] = xreal[31];////Teer quarry expansion
 	durham.infMatrix[0][2] = 7;
 	durham.infMatrix[0][4] = 22.6;
+	durham.infMatrix[0][5] = 3 + rand() % 3;
 	durham.infMatrix[1][0] = xreal[32];////Reclaimed water (low)
 	durham.infMatrix[1][2] = 7;
 	durham.infMatrix[1][4] = 27.5;
+	durham.infMatrix[1][5] = 3 + rand() % 3;
 	durham.infMatrix[2][0] = xreal[33];////Reclaimed water (high)
 	durham.infMatrix[2][2] = 17;
 	durham.infMatrix[2][4] = 104.4;
+	durham.infMatrix[2][5] = 3 + rand() % 3;
 	durham.infMatrix[3][0] = xreal[34];////Lake Michie expansion (low)
 	durham.infMatrix[3][2] = 17;
 	durham.infMatrix[3][4] = 158.3;
+	durham.infMatrix[3][5] = 3 + rand() % 3;
 	durham.infMatrix[4][0] = xreal[35];////Lake Michie expansion (high)
 	durham.infMatrix[4][2] = 17;
 	durham.infMatrix[4][4] = 203.3;
+	durham.infMatrix[4][5] = 3 + rand() % 3;
 	///Raleigh infrastructure
 	raleigh.infMatrix[0][0] = xreal[36];////Little River Reservoir
 	raleigh.infMatrix[0][2] = 17;
 	raleigh.infMatrix[0][4] = 263.0;
+	raleigh.infMatrix[0][5] = 3 + rand() % 3;
 	raleigh.infMatrix[1][0] = xreal[37];////Richland Creek Quarry
 	raleigh.infMatrix[1][2] = 17;
 	raleigh.infMatrix[1][4] = 265.0;
+	raleigh.infMatrix[1][5] = 3 + rand() % 3;
 	raleigh.infMatrix[2][0] = xreal[38];////Neuse River Intake
 	raleigh.infMatrix[2][2] = 17;
 	raleigh.infMatrix[2][4] = 225.5;
+	raleigh.infMatrix[2][5] = 3 + rand() % 3;
 	raleigh.infMatrix[3][0] = xreal[39];////Reallocate Falls Lake
 	raleigh.infMatrix[3][2] = 12;
 	raleigh.infMatrix[3][4] = 68.2;
+	raleigh.infMatrix[3][5] = 3 + rand() % 3;
 	
 	if(formulation == 2)
 	{
@@ -1070,23 +1105,29 @@ void Simulation::calculation(double *c_xreal, double *c_obj, double *c_constr)
 		owasa.infMatrix[4][0] = xreal[40];////Western Wake Treatment plant
 		owasa.infMatrix[4][2] = 12;
 		owasa.infMatrix[4][4] = 243.3*xreal[49];
+		owasa.infMatrix[4][5] = 3 + rand() % 3;
 		owasa.infMatrix[5][0] = xreal[41];////Western Wake Treatment plant
 		owasa.infMatrix[5][2] = 27;
 		owasa.infMatrix[5][4] = 316.8*xreal[49];
+		owasa.infMatrix[5][5] = 3 + rand() % 3;
 		///Durham infrastructure
 		durham.infMatrix[5][0] = xreal[42];/////Western Wake Treatment plant
 		durham.infMatrix[5][2] = 12;
 		durham.infMatrix[5][4] = 243.3*xreal[50];
+		durham.infMatrix[5][5] = 3 + rand() % 3;
 		durham.infMatrix[6][0] = xreal[43];////Western Wake Treatment plant
 		durham.infMatrix[6][2] = 27;
 		durham.infMatrix[6][4] = 316.8*xreal[50];
+		durham.infMatrix[6][5] = 3 + rand() % 3;
 		///Raleigh infrastructure
 		raleigh.infMatrix[4][0] = xreal[44];//Western Wake Treatment plant
 		raleigh.infMatrix[4][2] = 12;
 		raleigh.infMatrix[4][4] = 243.3*xreal[51];
+		raleigh.infMatrix[4][5] = 3 + rand() % 3;
 		raleigh.infMatrix[5][0] = xreal[45];////Western Wake Treatment plant
 		raleigh.infMatrix[5][2] = 27;
 		raleigh.infMatrix[5][4] = 316.8*xreal[51];
+		raleigh.infMatrix[5][5] = 3 + rand() % 3;
 	}
 	caryUpgrades[0] = xreal[46];
 	caryUpgrades[1] = xreal[47];
@@ -1664,10 +1705,10 @@ void Simulation::createRiskOfFailure(int realization, int synthYear, double durh
 			riskOfFailureStorageIP.setDemands(durhamROFDemand, owasaROFDemand, raleighROFDemand, caryROFDemand, numdaysROF);//passes demands to storage calcs
 			
 			//Inflow Calcs
-			syntheticIndex = (yearROF-1)*52+weekROF-1;
+			syntheticIndex = (yearROF)*52+weekROF-1;
 			durhamROFInflow = durhamInflows.synthetic[realization][syntheticIndex];//Durham Inflows
-			raleighROFInflow = owasaInflows.synthetic[realization][syntheticIndex];//Raleigh
-			owasaROFInflow = fallsInflows.synthetic[realization][syntheticIndex];//OWASA
+			raleighROFInflow = fallsInflows.synthetic[realization][syntheticIndex];//Raleigh
+			owasaROFInflow = owasaInflows.synthetic[realization][syntheticIndex];//OWASA
 			wbROFInflow = wheelerInflows.synthetic[realization][syntheticIndex];//Wheeler&Benson
 			claytonROFInflow = claytonInflows.synthetic[realization][syntheticIndex];//Clayton gauge
 			crabtreeROFInflow = crabtreeInflows.synthetic[realization][syntheticIndex];// Crabtree creek
@@ -2026,6 +2067,7 @@ void Simulation::createInfrastructure()
 		raleighConstruction = raleigh.buildInfrastructure(x);
 		if(raleighConstruction == 1)
 		{
+			//cout<<x<<"  "<<year<<endl;
 			switch(x)
 			{
 				case 0:
@@ -2324,11 +2366,11 @@ void Simulation::createInfrastructureRisk(int realization, int synthYear, double
 			riskOfFailureStorageInf.setDemands(durhamROFDemand, owasaROFDemand, raleighROFDemand, caryROFDemand, numdaysROF);//passes demands to storage calcs
 					
 			//Inflow Calcs
-			syntheticIndex = (yearROF-1)*52+weekROF-1;
+			syntheticIndex = (yearROF)*52+weekROF-1;
 			
 			durhamROFInflow = durhamInflows.synthetic[realization][syntheticIndex];//Durham Inflows
-			raleighROFInflow = owasaInflows.synthetic[realization][syntheticIndex];//Raleigh
-			owasaROFInflow = fallsInflows.synthetic[realization][syntheticIndex];//OWASA
+			raleighROFInflow = fallsInflows.synthetic[realization][syntheticIndex];//Raleigh
+			owasaROFInflow = owasaInflows.synthetic[realization][syntheticIndex];//OWASA
 			wbROFInflow = wheelerInflows.synthetic[realization][syntheticIndex];//Wheeler&Benson
 			claytonROFInflow = claytonInflows.synthetic[realization][syntheticIndex];//Clayton gauge
 			crabtreeROFInflow = crabtreeInflows.synthetic[realization][syntheticIndex];// Crabtree creek
@@ -2603,7 +2645,9 @@ void Simulation::triggerInfrastructure(int realization)
 	}
 	if(raleigh.infRisk>raleigh.infTrigger)
 	{
+		
 		raleighIndex = raleigh.startNewInfrastructure(year);
+		//cout<<raleighIndex<<"Init  "<<year<<endl;
 		switch(raleighIndex)
 		{
 			case 0:
@@ -2855,6 +2899,7 @@ void Simulation::realizationLoop()
 			{
 				createInfrastructure();
 				createInfrastructureRisk(realization, year-1, durham.averageUse + durham.infBuffer, owasa.averageUse + owasa.infBuffer, raleigh.averageUse + raleigh.infBuffer, cary.averageUse + cary.infBuffer);
+				//out1<<raleigh.infRisk<<","<<raleigh.infTrigger<<","<<durham.infRisk<<","<<owasa.infRisk<<endl;
 				triggerInfrastructure(realization);
 				durham.annualUpdate(year-1, realization);
 				owasa.annualUpdate(year-1, realization);
@@ -2919,5 +2964,6 @@ void Simulation::updateFallsQuality()
 Simulation::~Simulation()
 {
 	zap(xreal);
+	zap(actualStreamflows);
 }
 

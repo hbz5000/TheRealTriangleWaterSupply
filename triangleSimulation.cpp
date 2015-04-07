@@ -19,6 +19,7 @@ void usage(int argc, char* argv[])
 {
 	cerr << "Usage: " << argv[0] << " [OPTIONS]" << endl;
 	cerr << "-r <realizations> \t Number of realizations. REQUIRED." << endl;
+	cerr << "-t <total streamflow> \t Number of streamflow records in distribution. REQUIRED"<<endl;
 	cerr << "-c <formulation> \t Constraint options.  REQUIRED."<<endl;
 	cerr << "-b <BORG Interface toggle> \t BORG interface options or write output to file.  REQUIRED." <<endl;
 	cerr << "-s <seed> \t Seed. (optional)." << endl;
@@ -31,6 +32,7 @@ void usage(int argc, char* argv[])
 // -m batch: batch method, for connection to MOEA
 // -m interactive: input decision variables at prompt
 // -rX: run model simulations using X number of realizations (different streamflow records)
+// -tX: total number of streamflow records to characterize the distribution from r number of streamflow realizations are drawn
 // -cX: user defined scenario X
 //		X = 0; 3 objective formulation
 //		X = 1; 4 objective formulation
@@ -64,12 +66,15 @@ int main (int argc, char *argv[])
 	int seed = 1;
 	int numRealizations;
 
-	while ((opt = getopt(argc, argv, "r:c:b:s:h")) != -1)
+	while ((opt = getopt(argc, argv, "r:t:c:b:s:h")) != -1)
 	{
 		switch (opt)
 		{
 			case 'r':
 				numRealizations = atoi(optarg);
+				break;
+			case 't':
+				simulation.numRecords = atoi(optarg);
 				break;
 			case 'c':
 				simulation.formulation = atoi(optarg);
@@ -166,7 +171,7 @@ int main (int argc, char *argv[])
 	if (simulation.borgToggle < 3)
 	{
 
-		c_num_obj = 7;//Number of objective variables
+		c_num_obj = 8;//Number of objective variables
 		
 		// JDH 11/12: Turning off constraints for now (below here, only for parallel version)
 		c_num_constr = 0;
@@ -259,7 +264,7 @@ int main (int argc, char *argv[])
 		//for (int i = 20; i < 38; i++)
 		//{
 			//simulation.solutionNumber = rank*18+i;
-			simulation.solutionNumber = 10;
+			simulation.solutionNumber = 381;
 			simulation.calculation(c_xreal, c_obj, c_constr);
 			for (int x = 0; x< c_num_dec; x++)
 			{

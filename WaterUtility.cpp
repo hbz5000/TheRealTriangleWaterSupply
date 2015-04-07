@@ -106,7 +106,7 @@ void WaterUtility::configure(int nmonths, int nyears, int ntypes, int ntiers, in
 	general_2d_allocate(actualPDF, 16, 17, 0.0);
 	
 	
-	general_2d_allocate(infMatrix,infrastructureCount, 5, 0.0);
+	general_2d_allocate(infMatrix,infrastructureCount, 6, 0.0);
 	general_2d_allocate(annualPayments, terminateYear, numRealizations, 0.0);
 	general_2d_allocate(annualInsurance, terminateYear, numRealizations, 0.0);
 	general_1d_allocate(netPresentCostInfrastructure, numRealizations, 0.0);
@@ -991,7 +991,7 @@ bool WaterUtility::tierIsResidential(int tier)
 int WaterUtility::buildInfrastructure(int infIndex)
 {
 	int indexValue = 0;
-	if(infMatrix[infIndex][3] == 3.0)
+	if(infMatrix[infIndex][3] == infMatrix[infIndex][5])
 	{
 		indexValue = 1;
 		infMatrix[infIndex][3] += 1.0;

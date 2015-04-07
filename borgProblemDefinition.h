@@ -63,7 +63,7 @@ void setProblemDefinition(BORG_Problem &problem, int formulation)
 	BORG_Problem_set_bounds(problem, 53, 0.0, 20.0);
 	BORG_Problem_set_bounds(problem, 54, 0.0, 20.0);
 	BORG_Problem_set_bounds(problem, 55, 0.0, 20.0);
-
+	BORG_Problem_set_bounds(problem, 56, 0.0, 20.0);
 	
 	// Set epsilons for objectives
 	// Original values: (works fine for Formulations 0-4)

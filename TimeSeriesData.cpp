@@ -113,8 +113,8 @@ void TimeSeriesData::generateSynthetic(int** randomNumbers, int terminateYear, i
 	
 		for (int year = 0; year < (terminateYear+1); year++)
 			for (int week = 0; week < 52; week++)
-				randomInflows[year*52 + week] = normalizedData[randomNumbers[year + realization*(terminateYear+1)][week]][week];	
-			
+				randomInflows[year*52 + week] = normalizedData[randomNumbers[year + realization*(terminateYear+1)][week]][week];
+				
 		for (int year = 0; year < (terminateYear+1); year++)
 		{
 			for (int weekCycle1 = 0; weekCycle1 < 52; weekCycle1++)
@@ -128,6 +128,7 @@ void TimeSeriesData::generateSynthetic(int** randomNumbers, int terminateYear, i
 						inflowsInt2[year*52 + weekCycle1] += 
 							randomInflows[year*52 + weekCycle2 + 26]*stoch2[weekCycle2][weekCycle1];
 				}
+				
 			}
 		}
 		
@@ -141,9 +142,14 @@ void TimeSeriesData::generateSynthetic(int** randomNumbers, int terminateYear, i
 					simulatedData[realization][year*52 + week] = inflowsInt1[year*52 + week + 52];	
 					
 				if(exponentiate)
+				{
 					synthetic[realization][year*52 + week] = exp(simulatedData[realization][year*52 + week]*standardDeviations[week] + averages[week]);
+				}
 				else
+				{
 					synthetic[realization][year*52 + week] = simulatedData[realization][year*52 + week]*standardDeviations[week] + averages[week];
+					
+				}
 			}
 		}
 		
