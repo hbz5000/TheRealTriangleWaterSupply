@@ -1000,7 +1000,6 @@ int WaterUtility::buildInfrastructure(int infIndex)
 	{
 		infMatrix[infIndex][3] += 1.0;
 	}
-	
  return indexValue;
 }
 int WaterUtility::startNewInfrastructure(int year)

@@ -354,7 +354,6 @@ void ReservoirStorage::calcTransfers(double transferDurham, double durhamRisk, d
 	double durhamRequestO;
 	double owasaRequestO;
 	double raleighRequestO;
-	//out2<<durhamRisk<<","<<raleighRisk<<","<<owasaRisk<<",";
 	//Determines how much water each utility needs to request to reach an acceptable risk-of-failure
 	if (owasaRisk>transferOWASA)
 		owasaRequestO = 1.0;
@@ -900,7 +899,6 @@ double ReservoirStorage::updateDurhamStorage()
 	
 	/////Teer Quarry Water Balance
 	teerQuarryStorage = teerQuarryStorage + teerDiversion - evap*(20 + 30*(teerQuarryStorage/(teerQuarryCapacity+.001))) - durhamDemand1;
-	
 	/////boundry conditions
 	if(teerQuarryStorage>teerQuarryCapacity)
 	{
@@ -1215,8 +1213,6 @@ void ReservoirStorage::updateJordanLakeStorage(double owasaJordanDemand, double 
 {
 ///////Jordan Lake//////////////////////////////////////////////////////////////////////////////////
 	
-	
-	//out2<<fallsLakeSupplyStorage<<","<<fallsLakeQualityStorage<<","<<lakeWBStorage<<","<<littleRiverRaleighStorage<<","<<raleighQuarryStorage<<","<<durhamStorage<<","<<teerQuarryStorage<<","<<OWASAStorage<<endl;
 	//////apportioning inflows to each Jordan Lake pool (water quality and individual utility supply storage)
 	/////surface area of Jordan Lake is 13940 acres
 	jordanLakeQualityStorage += (jordanInflow+durhamReturn2+owasaReturn+OWASASpillage-evap*13940)*jordanQualityFraction-jordanLakeMinRelease;
@@ -1224,7 +1220,6 @@ void ReservoirStorage::updateJordanLakeStorage(double owasaJordanDemand, double 
 	durhamJordanStorage += (jordanInflow+durhamReturn2+owasaReturn+OWASASpillage-evap*13940)*jordanDurhamFraction - durhamRequest - durhamJordanDemand;
 	owasaJordanStorage += (jordanInflow+durhamReturn2+owasaReturn+OWASASpillage-evap*13940)*jordanOWASAFraction - owasaRequest - owasaJordanDemand;
 	caryJordanStorage += (jordanInflow+durhamReturn2+owasaReturn+OWASASpillage-evap*13940)*jordanCaryFraction - CaryUse;
-	
 	/////if water quality storage exceeds quality pool capacity, excess water is apportioned to the individual supply storage pools
 	if (jordanLakeQualityStorage>jordanLakeQualityCapacity)
 	{

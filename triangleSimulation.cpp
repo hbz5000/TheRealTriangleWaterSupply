@@ -261,10 +261,10 @@ int main (int argc, char *argv[])
 		completeFilename = sstm.str();
 		ofstream out1;
 		openFile(out1, completeFilename);
-		//for (int i = 20; i < 38; i++)
+		//for (int i = 0; i < 2; i++)
 		//{
 			//simulation.solutionNumber = rank*18+i;
-			simulation.solutionNumber = 381;
+			simulation.solutionNumber = 0;
 			simulation.calculation(c_xreal, c_obj, c_constr);
 			for (int x = 0; x< c_num_dec; x++)
 			{

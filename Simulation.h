@@ -82,6 +82,8 @@ private:
 	data_t claytonInflowSYN, crabtreeInflowSYN;
 	data_t jordanLakeInflowSYN, lillingtonGaugeInflowSYN, littleRiverRaleighInflowSYN;
 	
+	data_t streamflowIndex;
+	
 	data_t caryFutureD, raleighFutureD, durhamFutureD, owasaFutureD;
 	data_t caryFutureB, raleighFutureB, durhamFutureB, owasaFutureB;
 	data_t durhamROF, owasaROF, raleighROF;
@@ -129,8 +131,9 @@ private:
 	double littleRiverRalInsuranceTrigger;
 	double fallsLakeReallocation;
 	
-	double fallsFailurePoint, fallsFailure, maxFallsFailure;
+	double fallsFailurePoint, maxFallsFailure;
 	double *totalFallsFailure;
+	int thisYearFalls;
 	
 	ofstream out1;
 	ofstream out3;
