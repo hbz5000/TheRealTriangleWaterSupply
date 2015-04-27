@@ -998,7 +998,7 @@ void Simulation::calculation(double *c_xreal, double *c_obj, double *c_constr)
 		durham.jordanLakeAlloc = 0;
 		raleigh.jordanLakeAlloc = 0;
 		owasa.jordanLakeAlloc = 0;
-		cary.jordanLakeAlloc = .32;
+		cary.jordanLakeAlloc = xreal[10];
 	}
 	else
 	{
