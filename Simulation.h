@@ -45,6 +45,7 @@ public:
 	int bondLength;
 	int numRecords;
 	double bondRate;
+	int rank;
 	
 private:
 	

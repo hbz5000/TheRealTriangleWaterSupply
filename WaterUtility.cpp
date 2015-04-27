@@ -441,6 +441,7 @@ void WaterUtility::annualUpdate(int year, int realization)
 		priceInsurance(year+1, realization);
 	}
 	annualInsurance[year - 1][realization] += annualPayment;
+	annualPayments[year - 1][realization] += annualPayment*annualRevenue;
 	annualPayments[year - 1][realization] = annualPayments[year - 1][realization]/annualRevenue;
 	
 	annualCosts[realization*terminateYear + year - 1] = Fund.calcAnnualLosses(annualRevenue, addInterest);
@@ -1046,6 +1047,7 @@ void WaterUtility::addDebt(int year, int realization, double amount, int repayme
 void WaterUtility::priceInsurance(int year, int realization)
 {
 	annualInsurance[year][realization] += insurancePremium*probReach*insurancePayment;
+	annualPayments[year][realization] += insurancePremium*probReach*insurancePayment*annualRevenue;
 	
 return;
 }

@@ -1255,14 +1255,12 @@ void Simulation::calculation(double *c_xreal, double *c_obj, double *c_constr)
 	if(borgToggle == 0)//Using MOEA, with overall objectives determined by the largest individual utility value for the given objective
 	{	
 		// The first three objectives (reliability, restriction frequency, and total cost) are used in all formulations
-		c_obj[0] = maxValue(durham.maxFailures, owasa.maxFailures, raleigh.maxFailures, cary.maxFailures);
+		c_obj[0] = maxValue(durham.maxFailures, owasa.maxFailures, raleigh.maxFailures, cary.maxFailures, maxFallsFailure);
 		c_obj[1] = durham.expectedNPC + owasa.expectedNPC + raleigh.expectedNPC + cary.expectedNPC;
 		c_obj[2] = maxValue(durham.peakDebt, owasa.peakDebt, raleigh.peakDebt, cary.peakDebt);
 		c_obj[3] = maxValue(durham.totalLosses, owasa.totalLosses, raleigh.totalLosses, cary.totalLosses);
 		c_obj[4] = maxValue(durham.maxRestrictions, owasa.maxRestrictions, raleigh.maxRestrictions, cary.maxRestrictions);
-		c_obj[5] = maxValue(durham.peakInsurance, owasa.peakInsurance, raleigh.peakInsurance, cary.peakInsurance);
-		c_obj[6] = xreal[7] + xreal[8] + xreal[9] + xreal[10];
-		c_obj[7] = maxFallsFailure;
+		c_obj[5] = xreal[7] + xreal[8] + xreal[9] + xreal[10];
 
 		
 	}

@@ -34,6 +34,7 @@ double std_dev_colwise(double**, int, int);
 double std_dev_colwise(double**, int, int, int);
 
 double maxValue(double, double, double, double);
+double maxValue(double, double, double, double, double);
 double meanValue(double, double, double, double);
 
 // Standardize data (make into Z values)

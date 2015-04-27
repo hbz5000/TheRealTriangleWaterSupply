@@ -173,6 +173,20 @@ double maxValue(double d1, double d2, double d3, double d4)
 	else
 		return d4;
 }
+double maxValue(double d1, double d2, double d3, double d4, double d5)
+{
+	if(d1 > d2 && d1 > d3 && d1 > d4 && d1 > d5)
+		return d1;
+	else if (d2 > d3 && d2 > d4 && d2 > d5)
+		return d2;
+	else if(d3 > d4 && d3 > d5)
+		return d3;
+	else if(d4 > d5)
+		return d4;
+	else
+		return d5;
+}
+
 double meanValue(double d1, double d2, double d3, double d4)
 {
 	return (d1 + d2 + d3 + d4)/4;

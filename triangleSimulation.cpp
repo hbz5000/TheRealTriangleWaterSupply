@@ -171,7 +171,7 @@ int main (int argc, char *argv[])
 	if (simulation.borgToggle < 3)
 	{
 
-		c_num_obj = 8;//Number of objective variables
+		c_num_obj = 6;//Number of objective variables
 		
 		// JDH 11/12: Turning off constraints for now (below here, only for parallel version)
 		c_num_constr = 0;
@@ -264,7 +264,7 @@ int main (int argc, char *argv[])
 		//for (int i = 0; i < 2; i++)
 		//{
 			//simulation.solutionNumber = rank*18+i;
-			simulation.solutionNumber = 0;
+			simulation.solutionNumber = 1;
 			simulation.calculation(c_xreal, c_obj, c_constr);
 			for (int x = 0; x< c_num_dec; x++)
 			{
