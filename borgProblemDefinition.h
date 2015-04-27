@@ -69,7 +69,7 @@ void setProblemDefinition(BORG_Problem &problem, int formulation)
 	// Original values: (works fine for Formulations 0-4)
 	
 	BORG_Problem_set_epsilon(problem, 0, 0.001);
-	BORG_Problem_set_epsilon(problem, 1, 50.0);
+	BORG_Problem_set_epsilon(problem, 1, 25.0);
 	BORG_Problem_set_epsilon(problem, 2, 0.02);
 	BORG_Problem_set_epsilon(problem, 3, 0.02);
 	BORG_Problem_set_epsilon(problem, 4, 0.05);
